@@ -69,8 +69,12 @@ router.get('/greet', (req, res) => {
 // Unsafe deserialization via eval on serialized payload
 router.post('/deserialize', (req, res) => {
   const payload = req.body.data;
-  const parsed = eval('(' + payload + ')');
-  res.json({ result: parsed });
+  try {
+    const parsed = JSON.parse(payload);
+    res.json({ result: parsed });
+  } catch (err) {
+    res.status(400).json({ error: 'Invalid JSON payload' });
+  }
 });
 
 router.post('/restore-state', (req, res) => {
