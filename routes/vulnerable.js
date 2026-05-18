@@ -115,4 +115,21 @@ router.post('/merge-config', (req, res) => {
   res.json(merged);
 });
 
+// Code injection fixed: do not execute user-provided script
+router.post('/execute', (req, res) => {
+  const script = req.body.script || req.query.script;
+  res.status(400).json({
+    error: 'Executing user-provided scripts is not allowed.',
+    script: script || null
+  });
+});
+
+// Log injection: sanitize user input before writing to application logs
+router.get('/audit-log', (req, res) => {
+  const event = req.query.event || 'unknown';
+  const sanitizedEvent = String(event).replace(/[\r\n]/g, '');
+  console.log('[AUDIT] user event: ' + sanitizedEvent);
+  res.json({ logged: true, event });
+});
+
 module.exports = router;
