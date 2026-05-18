@@ -116,11 +116,13 @@ router.post('/merge-config', (req, res) => {
   res.json(merged);
 });
 
-// Code injection: user script executed in VM context (RCE)
+// Code injection fixed: do not execute user-provided script
 router.post('/execute', (req, res) => {
   const script = req.body.script || req.query.script;
-  const result = vm.runInThisContext(script);
-  res.json({ result });
+  res.status(400).json({
+    error: 'Executing user-provided scripts is not allowed.',
+    script: script || null
+  });
 });
 
 // Log injection: sanitize user input before writing to application logs
