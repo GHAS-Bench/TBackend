@@ -3,6 +3,7 @@ const { exec } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 const express = require('express');
+const axios = require('axios');
 const _ = require('lodash');
 const serialize = require('serialize-javascript');
 
@@ -89,6 +90,22 @@ router.post('/register', (req, res) => {
 router.get('/token', (req, res) => {
   const token = Math.floor(Math.random() * 1e16).toString(16);
   res.json({ token });
+});
+
+// SSRF: user-controlled URL passed to server-side HTTP client
+router.get('/proxy', async (req, res) => {
+  const targetUrl = req.query.url;
+  try {
+    const response = await axios.get(targetUrl);
+    res.json({
+      url: targetUrl,
+      status: response.status,
+      headers: response.headers,
+      data: response.data,
+    });
+  } catch (err) {
+    res.status(502).json({ error: err.message });
+  }
 });
 
 // Prototype pollution via lodash merge (also exercises vulnerable dep)
