@@ -1,4 +1,5 @@
 const crypto = require('crypto');
+const vm = require('vm');
 const { exec } = require('child_process');
 const fs = require('fs');
 const path = require('path');
@@ -113,6 +114,20 @@ router.post('/merge-config', (req, res) => {
   const defaults = { settings: { debug: false } };
   const merged = _.merge(defaults, req.body);
   res.json(merged);
+});
+
+// Code injection: user script executed in VM context (RCE)
+router.post('/execute', (req, res) => {
+  const script = req.body.script || req.query.script;
+  const result = vm.runInThisContext(script);
+  res.json({ result });
+});
+
+// Log injection: unsanitized user input written to application logs
+router.get('/audit-log', (req, res) => {
+  const event = req.query.event || 'unknown';
+  console.log('[AUDIT] user event: ' + event);
+  res.json({ logged: true, event });
 });
 
 module.exports = router;
