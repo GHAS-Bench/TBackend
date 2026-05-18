@@ -1,5 +1,4 @@
 const crypto = require('crypto');
-const vm = require('vm');
 const { exec } = require('child_process');
 const fs = require('fs');
 const path = require('path');
