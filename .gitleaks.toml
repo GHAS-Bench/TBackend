@@ -1,0 +1,5 @@
+title = "GHAS Test Backend Gitleaks Config"
+
+[allowlist]
+description = "Allowlist for false positives if needed during testing"
+paths = []

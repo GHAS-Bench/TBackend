@@ -1,0 +1,21 @@
+{
+  "name": "tbackend-ghas-test",
+  "version": "1.0.0",
+  "description": "Intentionally vulnerable backend for GitHub Advanced Security testing",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "audit:critical": "npm audit --audit-level=critical"
+  },
+  "dependencies": {
+    "axios": "0.21.1",
+    "express": "4.17.1",
+    "jsonwebtoken": "8.5.1",
+    "lodash": "4.17.15",
+    "minimist": "1.2.5",
+    "serialize-javascript": "3.1.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
