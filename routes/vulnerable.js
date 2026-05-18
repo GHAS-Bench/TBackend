@@ -123,10 +123,11 @@ router.post('/execute', (req, res) => {
   res.json({ result });
 });
 
-// Log injection: unsanitized user input written to application logs
+// Log injection: sanitize user input before writing to application logs
 router.get('/audit-log', (req, res) => {
   const event = req.query.event || 'unknown';
-  console.log('[AUDIT] user event: ' + event);
+  const sanitizedEvent = String(event).replace(/[\r\n]/g, '');
+  console.log('[AUDIT] user event: ' + sanitizedEvent);
   res.json({ logged: true, event });
 });
 
